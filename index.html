@@ -911,6 +911,265 @@
 
             .modal-overlay { padding-top: 24px; }
         }
+
+        /* Final blue theme and UX polish */
+        :root {
+            --ink: #102a43;
+            --muted: #4f6f86;
+            --line: #c6dff2;
+            --surface: #ffffff;
+            --surface-soft: #f4f9ff;
+            --brand-blue: #0b7fc3;
+            --brand-blue-strong: #075b94;
+            --brand-blue-soft: #e5f3ff;
+            --teal: #168aad;
+            --teal-strong: #0b6f95;
+            --emerald: #247ba0;
+            --amber: #2f9fd7;
+            --coral: #1d70b8;
+            --shadow: 0 20px 52px rgba(7, 91, 148, 0.16);
+            --radius: 10px;
+        }
+
+        body {
+            background:
+                linear-gradient(180deg, rgba(11, 127, 195, 0.18), rgba(244, 249, 255, 0) 370px),
+                linear-gradient(135deg, #eef7ff, #f8fcff);
+            color: var(--ink);
+        }
+
+        .progress-container {
+            height: 14px;
+            background: #d8eaf8;
+        }
+
+        .progress-bar,
+        .progress-bar.medium,
+        .progress-bar.complete {
+            background: linear-gradient(90deg, #075b94, #0b7fc3, #32a9e6);
+        }
+
+        .progress-text {
+            color: var(--brand-blue-strong);
+            border-color: #b7d8ef;
+        }
+
+        .container {
+            border-color: rgba(11, 127, 195, 0.22);
+            box-shadow: var(--shadow);
+        }
+
+        header {
+            background:
+                linear-gradient(135deg, #ffffff 0%, #eef8ff 56%, #dff1ff 100%);
+        }
+
+        header::after {
+            background: linear-gradient(90deg, #075b94, #0b7fc3, #32a9e6);
+        }
+
+        h1 {
+            color: #0b3155;
+            font-size: clamp(1.55rem, 2.35vw, 2.15rem);
+        }
+
+        .ehc-logo-text {
+            color: var(--brand-blue);
+        }
+
+        .ehc-logo-text .holding {
+            color: var(--brand-blue-strong);
+        }
+
+        .section-title {
+            border-bottom-color: #c3ddf1;
+        }
+
+        .section-title i,
+        label i {
+            color: var(--brand-blue-strong);
+        }
+
+        .section-title i {
+            background: var(--brand-blue-soft);
+        }
+
+        .insight-card {
+            background: linear-gradient(180deg, #ffffff, #f2f9ff);
+            border-color: #c6dff2;
+        }
+
+        .insight-card strong,
+        .report-field strong,
+        .section-progress-card h3,
+        .improvement-card-header h3 {
+            color: var(--brand-blue-strong);
+        }
+
+        .section-progress-card,
+        .improvement-card,
+        .report-card,
+        .report-field {
+            border-color: #c6dff2;
+        }
+
+        .section-progress-fill,
+        .improvement-card-header h3::before {
+            background: linear-gradient(180deg, #0b7fc3, #32a9e6);
+        }
+
+        input,
+        select,
+        textarea {
+            background: #fbfdff;
+            border-color: #c6dff2;
+        }
+
+        input:hover,
+        select:hover,
+        textarea:hover {
+            border-color: #8dbfe3;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #0b7fc3;
+            box-shadow: 0 0 0 4px rgba(11, 127, 195, 0.14);
+        }
+
+        input.is-complete,
+        select.is-complete,
+        textarea.is-complete {
+            border-color: rgba(11, 127, 195, 0.48);
+            background: #f8fcff;
+        }
+
+        input.is-missing,
+        select.is-missing,
+        textarea.is-missing {
+            border-color: #1d70b8;
+            background: #f2f8ff;
+            box-shadow: 0 0 0 4px rgba(29, 112, 184, 0.12);
+        }
+
+        .secondary-btn {
+            color: var(--brand-blue-strong);
+            border-color: #b7d8ef;
+            background: #ffffff;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #075b94, #0b7fc3, #32a9e6);
+            box-shadow: 0 12px 28px rgba(11, 127, 195, 0.28);
+        }
+
+        .secondary-btn:focus-visible,
+        .submit-btn:focus-visible,
+        .icon-btn:focus-visible,
+        .section-progress-card:focus-visible {
+            outline: 3px solid rgba(11, 127, 195, 0.28);
+            outline-offset: 3px;
+        }
+
+        .review-modal {
+            width: min(940px, calc(100% - 24px));
+        }
+
+        .report-card-header {
+            background: linear-gradient(135deg, #075b94, #0b7fc3);
+        }
+
+        .report-section h4 {
+            background: #e5f3ff;
+            color: var(--brand-blue-strong);
+        }
+
+        .scroll-top-btn {
+            background: #075b94;
+        }
+
+        @media (min-width: 981px) {
+            .form-container {
+                padding: 38px 46px 42px;
+            }
+
+            input,
+            select {
+                min-height: 50px;
+            }
+
+            textarea {
+                min-height: 138px;
+            }
+
+            .btn-container {
+                position: sticky;
+                bottom: 0;
+                z-index: 20;
+                padding: 20px 0 0;
+                background: linear-gradient(180deg, rgba(255, 255, 255, 0), #ffffff 42%);
+            }
+        }
+
+        @media (max-width: 720px) {
+            body {
+                padding: 44px 8px 10px;
+            }
+
+            .container {
+                border-radius: 12px;
+            }
+
+            header {
+                padding: 22px 14px 24px;
+            }
+
+            h1 {
+                font-size: 1.42rem;
+            }
+
+            header p {
+                font-size: 0.9rem;
+            }
+
+            .ehc-logo-mark {
+                width: 92px;
+            }
+
+            .ehc-logo-text .arabic {
+                font-size: 1.35rem;
+            }
+
+            .ehc-logo-text .english {
+                font-size: 1.12rem;
+            }
+
+            .form-container {
+                padding: 20px 12px 24px;
+            }
+
+            .insight-card,
+            .section-progress-card,
+            .improvement-card,
+            .report-field {
+                border-radius: 10px;
+            }
+
+            input,
+            select,
+            textarea {
+                min-height: 52px;
+                font-size: 16px;
+            }
+
+            .modal-actions {
+                position: sticky;
+                bottom: 0;
+                background: #ffffff;
+                padding-top: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -932,7 +1191,7 @@
                     <img class="ehc-logo-mark" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASIAAAEUCAYAAACPnTsGAAASgElEQVR4nO2dO7LkxhFFW4yxuINeilwugIZWopAtU7aCK6GhBcidpWAHcqVocqB5r9kffPJzM/OcCIaC1GtUoVB1kFWoz+UCcILrP//939s/FCKc4YdTvwb4BjKCMyAiOAzyASsQEZiBmOAoiAgOgXTAEkQEphJCUHAERATmICPYCyKCXSAZ8AARgQsIC/aAiMBNLsgItoKIACAdRASbILoBTxARvAUJgTeICADSQUTgFg0tf/vpTxQvbAERgQtICPaAiCBkbIh9i+AViAhCoqH1vzHwDY9ARPAQhAGRICIIH6BGcnAPIoIwPkoKGcFHEBF8gs/1kAEigjSIimAFEcH/IRqCLBARpEJUBDcQEaQLARkBIgJEAOkgIpBYV0ZUNBtENBwlASjlBWJBRACQDiIajGIEopgn8AcRDUW5wSvnDXxARBAGgoFnIKKBVBBChTyCHYgIANJBRMOoFGlUyiucAxGBtFSQ0QwQ0SC8GjWygLMgoiFUXtSK6PqDiKAEyKg3iGgAlaMhmAEigjLCQWp9QUTNIRqCCiAicNljiC90sAdE1JjoaGhNzztdumj9QERNyTqRA0nAERARuG4B6wXC6wUiasiU88mQUR8QEZSUEPQCETXDOkqIkBNjUoCIGlGxS7ami4xmg4jgLXTZwBtE1ITK0ZBFPhi4rg0ighRZPbse0ddMEFEDvKOh2/UtIw4v2RAV1QURDWarhC7B0EWbByIqTsUoYEue6aLNAhEVJqJLdvT6Xa8NPiAikG3MREVzQERF8YyGoiREVAQriGgYalHGOxmp5Rd8QEQF6RZJsJsjIKJBqHTJ9kJU1B9EVAxVWajO/1EuL/gOIhqCZ1Rxu7bFKvp3aXhcFzRARPAbCks4iF7mgogG4B0NXcRBcPogokKojaO8kpBHVFRBenAMRASH2CIFxAFbQUTN6SYDxp96gojAlW4iBB8Q0XCOjA95y4XB5XkgosYQjUAVEBGUA8H2AxHBGHHQ5dMFEUFJqUAvEBEApIOIoCREZr1ARACQDiIC9wFfBonhHV/e/gWM4s//+dfbv/nV4ZpH0vC6LsRDRAQA6SCixtAlgiogouEc+fr0l3/81XUf6F///gtzlYaBiJpLIzsq8pKWtwwhFkQEY0RApKULIhpA1mmqFWUFOSCiHY35/p/L8B0KX4nmqISIWmbCPCLHiXpqyxBu+bXO00049/IgEoK9SDWUSKIjGksBnM37s7zcrntkkuCNVUZnJLQ1GqoSbT17TmovKAXGFEj21yPriughozMissBTRJ4S8noxTKJtASiJR/Ws+EfpZ3WrqkVD3vVrGSanNmNEFcTzLM9HKt3tN2fv+Uz6E/kowa/OaV2HdevK3lRF8VSYsHjLQ3RUtCdayeiWPUrz648/X1RYGsipTETUUTwRX7X2ovzFKzpvymXxrm1k16O9yGZ2gniesbcSWZZV9GC16tjQu/SUIqItqItJJiKaLJ6zYzcW40UZKE5erBIFdYua0jJSseFksKeyWJRpVETkPS60N4296VSLiLaSJaewRBFPDRlFiKi6hDqLKEtMbl0zxJODejeN7lgtrkFdOpllB6AxgO0ZEXlHKUfSOZrGlIhoK2flhIgMCjRKwhEy8hJRJwndQES29fVUxc78zFyh7+txv96itBbRka6YuoRuICLbuvslqxFVXv2+N81sAWeNG6lKKIJXOxxchnJ9Md50WgwKK8kfoTRHwvo+z97bq3xYRERekwit0rOYK/QxIlJtA5UweVMqPQhFAaluG/EoH2f3IzpCxB5GFmndi8i7rl0Hycms6+DZOLLyMkFGR/cjsuoKRUrobHpn0rXg2lRMt7psOmaDjPZxpswryLba+jHPtL24FpfTH8aI1GQUHTXsSctaAkfuU0FEjxr2loYaHQVlpxvJtZCYPtbhh9uFWiagGjVYPrCsMbIIGaksArUQwQQRVZKRu4juE1GSkedD8vya5ZGesng+goR6CehR3f3iNedEYZOv6Ad0duvVrPk+n9JM3DxfMQo5k4eoF8u1kICe3WfrrsuE5SLWG/BnnuLhKaCILWY9tu29BKfpzbN7enmjyMi38C3K3Vp2CiKylpH317msEz2uQieJbMnLq+uFGzd6HKW7jKyvqyIihfGhd2lnLlO6iq9G2LsuNdX4yivdPcicTrD1eq9EVHUCoXW37Ha9ToteF4Gx3NBtSJW2RM3C4z7fXfPo6nuVsZqMiYyP0vp0rlkDES0CAlopu41HZaL63qpzk6LPKLNI5/4alUW0CAlo5YfqN1CRCKEf+foW/XxvjT1r0eoZCVVlCXrGt7q3t/7tEtENZGSD12D0nmuv189+pnuFtEcMZyXSSUIX4bl0u0UEepHRx+vsEVy2gM4IKUIQSChuQu+XjidFHGFr4WXc99by9oyyIrnJaIsEbn/jNfsaCW3Hok2MnNPjOTPZKw9qi5Gj2CKEdzLykEqVwerF8ZlbHjU0culFxb2TFDdSqyIjJRFV37f9+iLPZ64v0xijUdhTKEpGlSVkIaMsEamfcrMY1jnONXN+EEo7LqrPC1KVUbSIpi1jWgzqmNlXs04VvvJ4U+dnorAtSMSXyEXwi+YzrPJp+vm+SuFVbfx7rl3tWWwlY2C6WnRdkR86HWRY/YEr7o7ZQUbekVT38o6470PziKLmGUXOBrVMq8I8q/Wezx4jPh2vY50uw+5bemZ15MkaFR6+1YEB7+61wmQ+hS4aEiogIqV5OhlpVeuiPmrI6kLa0+Wy7p5NjRwXp/t2jYiiZWQ1Ycvq8ICz14i45jvUZdQp71fxqNxTvu5ds4qR0Zre3jTX35zJq+ekxTPPQrVRZ0RFHoPf1xPPvUN05jJYnXlEkfVAscpbymJqvcWgvOdCUw/U8+vxpfRabFpK6GB1ZGTU4Q1hiVXFXKMitegoOiqyun+vZUHLtyjJcoLlxZnQr2aRgkBG/qgJKTKfR7vgFt33PVRZLB3SNbPuOm3tYlSYz2PdLXs2P6g7W/cw2vu378gq56XZjg3hIrqBjHzI/qr2qIGrjs9YyiiapZmEUic0eu+NYp2WIpl72yiOLUXvSaTKVbgulJxZvYXuMqpYqaqIQDVaizrD7mga7URUccIj9BJSJRktAfU3q42kR0QZMlIW0tG8qd+XMhVktDQcF5ISUdbs6+oN99UcksvgyOioVI4c9hjBsrGeVpaQjIgyC6K6kCD2RJBIFuEjrtqKKPpLWgUhee+BnY3qCn+F6GgJlJBCXUmZR6Qyx+hZ+vfXOvLb6RvddyBjrtGyow50kZCkiBRkdJ+XixiKeerKGhl5C2lJOHpIqR5Jdc1UumlV063Q3czmqFDW7ppll+3owtRrMwnJRkTWkdF6LbOMbUivesXovFXH2fR+/+0vKbtCXBtKSF5E0XsZWaRxEUSx4mWP7az/v5UAI8r4Klq/WnfNqj3I7l+4Isj4gqb41e4ey21DVOtaCRFZFp7HXjAZ29hGptcdZRldix/o0KZr5r0FbPbhjGwW59tlUk836mWzCEuoTETkfY7U0U3yL0VRr5Rno5Szv82OkK7DJFQqIlrx2n3w0TW9dzqsUEGmkrHp/rXgpvcjI6IV9U/xFSpIdvpHNlWLjlTWNL3TvRaPsEdGRCuV92XeKoHK92jJvQjObEd7dNmGxxiS97NdirxsSouoakOtVDm6YXmU0Ncff/7t3zNmRXesZ6VFVE1G1tMQqlU2FTqc4vGKivWi5BhRxYKvkMcO7DlS6NKQpWg9ayEi9QWeZ/Klek8dUNh3yJKlcF0p3zV79jAUQubKFWMSlc8461LP2kREShFSVNrVZnZ780om7yKfqpHR0uT5tRVRhpCUu4ddsRRINRktjepau65Zxqmo3hXi1ZdBi69nSt3ZKTsynmFpJKBxInr3II/uTd2JSvd1H72c6ZY9+42ijJZCz2gPI0VU8QF7R0XKrFJYhRLVhVKKjpbGz3fEGBHUHivZIh/raMjjGkdZhow7EhE1wToqWpcw/M4vd//u99+OLJn4+vIvPu8tfVZGEeNoywDx3IOIClFpOcuRxmbdAD0atNdHj2WgfD6CiBphGRV5fUmzXm93ScTqME5ARCFYbqz/LipSHbi2ztO7Ms0oA8VyrwIRkQMee2tnyYjGBRFg8CbdhMgIZOu1vaIzxWgIzsHn+6bbfCrkCQnBVuiaFW7o0RFJdqRRoczhGISwAxpEtkAsiDpbHnLgwTUWUJdG6iUhPrfrULZyRlNZQlWFtLXM9wyen87UzjRhGxSmuIReVfij+arQiCwlxLE9+shXyGyqHf9Svbthmf/oF4hieVaBgmt40mtVGVnlO7sbrVSmVaDAmp5Dvjf/mY3HMq/ZElpBRvtARA9QXujZSUhHyvlZ/lQEdA9C2gYiGvB1RWlQ2yMvqhJSqgPqUEBOlVqt8mXcV0Sa6hJSrQ9qUDgDJFSx4Sp+FetcL7KhYIYeWKjciBXmBnlRpX5EQ6GISihqXEetQXeW0Aoy+iOsvhepXFaNa+++QUqHK2Y20A7jUJUhIjKoaGcakOKpEFkNLzoa8l4oa512ZygM4z2llRu7cl4zumTZLxBk9J3xIoqWkEKYn9UAXt175thQppCQ0e+wVWwgChLK2t72bHqe+T1THojEhtEiioyGVCSUkacqm91nyEixXmQwWkRRKFc25bxlcDQ6UpFpVRBRkWUOnnh3eyrOG4qU0bVAHfFmrIgiHn6lClYpr1FQJnGMFdFRMvZHjsI6zxXLIGsblWuDsjoDInJgeqXqVpYKeegOIjKmeqWNzH+lAd6q2+9WYeRaswpzRjJ3IrQ4Iba6kCNOzo2+vjIjReQF0/7zuW/IHuNeU2XhCV0zEW6VW6mCn2nAStHQWq7RZav0LCuAiAR2C9xTaSdVcI9FrhblpyTaLiCiZJTF0rXBKZf5VBBRscFv9eUH1ufVexExGF91d4YMxolIpSEzZpFPtgxhsIhgH93f0Kyc1wARNYmwlNNVz2+1cukIIhoGjQ4UQUTNuwKKA9WKefBarIr4t4GI3kBF8hGMgrRAB0RUpDFlH6MzAcolD0QE7agebV2L5/8IiCiQ6E2zOrzhO9wDvAcRiTPx7Thhtjt8BhEJk3ECbSTeDRhB1AERiUIj+g6zn/uDiAThGGOt8gR/EJFQg8g4CjqbqNX608q1GqNE5LHRlsV1LAWUOTakPi6FjHRhz+pGjcFLBN6C2boP9O1vzpbf+nt1aU5jVERkSeVuVNV8e0ShEQceIL33EBE1abjVK3vm6RiKz/c67LQQIqKClfQepQobkRel+wUbEFFx9jbKqLPcj8BpqnNBRIXxlpD6BESVyKhC1KwOIiqKqoQsqCqjSmWsBiIqyIS9nCvK6AZCOgYiKsSRk0qzGkb0iaqKR3YTIW0HERXgaCPLXr2fcbyzkoxuIKNtICJhzrzlOzWAIzJSElKnZ+GFzMOKoEqFyF7gad2Is/fbrvLcH6EkVE+YWd1s2YJKXpRmHH/8+8pS6ox0pbPGoxIeWYjp0djVV+97lf2Z31eQ0iL+YrBixE16dg+yDz3M7vZUl5G6lJYhIqJrVrRCqO6t9C4N63xbbOuhKqFJIKJCAurQYDxkNHG1ejf4fB/8CfjoV5+KG6pFpxc5iRDp2UJEdKKSeVb67g3KKzK68fG6ni+T9X87RKrZEBGJvekmvdUj0o8oz+xy7AARkUhlin6rZt9vRGSUESURHR2DiChwtu6jdDIWR6pIKCs/nmWuPCtdmfERUUajzKpcagLKjig8ZTRFIFYQER3gaCXL3BpCWUIV8znlPqIYLaIJCyjVVqJ3yHO1OlCBsSJSruhWDbn6PZL/OYwVUcc3YQf5dLunynmPZORgdbcu2YTKXnkrDwav3zNORJ0kNEFAj2DOTj/omhWTUJfxHwsyy0FhD6pOjIiIjm4VoSQhKvK2slF6ZrAdIqInqFRooh/d8oqKiq4iddGTERFRxQdPBGRXfgrPE14zRkQKW3u8A/n4litC0oUBtG8goFlk7vWdvc+5Iq1vbgsIaDYZp58gosFds49kh+jd326VYCxJg1ENgugHPOuKZ1S0NH95tb65FQQEUXXH66PI0lxEI7tmEXSvOFPY23XjWKNjMKHRGCYg9qXSkpJqEBEZQQQ0h3dRksXps9NoX1CdDiaEevXsWR3hE/5niIgOgIDgVZ34KBnGjLbBGNEOGP+BI/Wk+/iOBUREGyACgiPcy4h69BxE9AIqDlhBXXoNXbMH0AUDbxDTZ4iIvkHFgGgYR/rOeBEhIFBgGb5nUvt5MI8eLPKBClwH1d1REVHXhwg9WYZHSa3gIQJc5PkfE8J1dQ8Rv7EAAAAASUVORK5CYII=" alt="">
                 </div>
                 <div>
-                    <h1>الخطة التصحيحية للأحداث</h1>
+                    <h1>الخطة التصحيحية للفرضيات</h1>
                     <p>إدارة الأزمات والكوارث بتجمع الشرقية الصحي</p>
                 </div>
             </div>
@@ -1117,12 +1376,12 @@
                 </div>
             </form>
         </div>
-        <footer><p>الخطة التصحيحية للأحداث - نموذج إلكتروني تم إنشاؤه بواسطة سعاد مرزا - فيصل القرشي</p></footer>
+        <footer><p>الخطة التصحيحية للفرضيات - نموذج إلكتروني تم إنشاؤه بواسطة سعاد مرزا - فيصل القرشي</p></footer>
     </main>
 
     <div class="modal-overlay" id="reviewModalOverlay">
         <div class="review-modal">
-            <h2>مراجعة الخطة التصحيحية للأحداث</h2>
+            <h2>مراجعة الخطة التصحيحية للفرضيات</h2>
             <p>راجع المدخلات قبل الطباعة أو التصدير إلى Excel.</p>
             <div class="report-card" id="reportPreviewCard"></div>
             <div class="modal-actions">
@@ -1137,7 +1396,7 @@
     <div class="modal-overlay" id="instructionsModalOverlay">
         <div class="review-modal">
             <h2>تعليمات الإرسال</h2>
-            <p>يرجى اتباع الخطوات التالية قبل إرسال الخطة التصحيحية للأحداث عبر Outlook.</p>
+            <p>يرجى اتباع الخطوات التالية قبل إرسال الخطة التصحيحية للفرضيات عبر Outlook.</p>
             <div class="report-card">
                 <div class="report-section">
                     <h4>خطوات مهمة</h4>
@@ -1147,12 +1406,16 @@
                             <span>يرجى حفظ ملف PDF عبر زر الطباعة الموجود في نافذة المراجعة.</span>
                         </div>
                         <div class="report-field full">
+                            <strong>حفظ ملف Excel</strong>
+                            <span>يرجى حفظ ملف Excel عبر زر تصدير Excel الموجود في نافذة المراجعة.</span>
+                        </div>
+                        <div class="report-field full">
                             <strong>فتح Outlook</strong>
                             <span>بعدها اضغط زر Outlook لفتح رسالة جاهزة.</span>
                         </div>
                         <div class="report-field full">
-                            <strong>إرفاق الملف</strong>
-                            <span>أرفق ملف PDF قبل إرسال البريد الإلكتروني.</span>
+                            <strong>إرفاق الملفات</strong>
+                            <span>أرفق ملف PDF وملف Excel قبل إرسال البريد الإلكتروني.</span>
                         </div>
                         <div class="report-field full">
                             <strong>نسخ البريد</strong>
@@ -1160,7 +1423,7 @@
                         </div>
                         <div class="report-field full">
                             <strong>إرسال البريد</strong>
-                            <span>بعد التأكد من إرفاق ملف PDF والمستلم، أرسل البريد الإلكتروني.</span>
+                            <span>بعد التأكد من إرفاق ملف PDF وملف Excel والمستلم، أرسل البريد الإلكتروني.</span>
                         </div>
                     </div>
                 </div>
@@ -1752,7 +2015,7 @@
             `).join("");
             return `
                 <div class="report-card-header">
-                    <h3>الخطة التصحيحية للأحداث</h3>
+                    <h3>الخطة التصحيحية للفرضيات</h3>
                     <p>${escapeHtml(getValue("facilityName"))}</p>
                 </div>
                 <div class="report-section">
@@ -1815,7 +2078,7 @@
                 <html lang="ar" dir="rtl">
                 <head>
                     <meta charset="UTF-8">
-                    <title>الخطة التصحيحية للأحداث</title>
+                    <title>الخطة التصحيحية للفرضيات</title>
                     <style>
                         * { box-sizing: border-box; }
                         body { font-family: "Segoe UI", Tahoma, sans-serif; background: #eef8fc; padding: 24px; color: #263238; }
@@ -1913,8 +2176,8 @@
         }
 
         function openOutlookCompose() {
-            const subject = encodeURIComponent(`الخطة التصحيحية للأحداث - ${getValue("facilityName")}`);
-            const body = encodeURIComponent("مرفق تقرير الخطة التصحيحية للأحداث بصيغة PDF.");
+            const subject = encodeURIComponent(`الخطة التصحيحية للفرضيات - ${getValue("facilityName")}`);
+            const body = encodeURIComponent("مرفق تقرير الخطة التصحيحية للفرضيات بصيغة PDF.");
             const mailtoUrl = `mailto:${encodeURIComponent(outlookRecipient)}?subject=${subject}&body=${body}`;
             const mailLink = document.createElement("a");
             mailLink.href = mailtoUrl;
@@ -1933,8 +2196,8 @@
                 if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
                     await navigator.share({
                         files: [file],
-                        title: "الخطة التصحيحية للأحداث",
-                        text: `إرسال الخطة التصحيحية للأحداث إلى ${outlookRecipient}`
+                        title: "الخطة التصحيحية للفرضيات",
+                        text: `إرسال الخطة التصحيحية للفرضيات إلى ${outlookRecipient}`
                     });
                     return;
                 }
@@ -2101,5 +2364,6 @@
     </script>
 </body>
 </html>
+
 
 
