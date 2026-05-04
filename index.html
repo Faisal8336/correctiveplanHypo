@@ -1,1 +1,2105 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الخطة التصحيحية للفرضيات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+        html { scroll-behavior: smooth; }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e0f7fa, #b2ebf2, #80deea);
+            color: #263238;
+            line-height: 1.7;
+            padding: 48px 20px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .progress-container {
+            position: fixed;
+            inset: 0 0 auto;
+            height: 28px;
+            background: #e0f7fa;
+            z-index: 1000;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(2, 136, 209, 0.12);
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #e53935, #ef5350);
+            transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1), background 0.35s ease;
+        }
+        .progress-bar.medium { background: linear-gradient(90deg, #f9a825, #fdd835); }
+        .progress-bar.complete { background: linear-gradient(90deg, #2e7d32, #43a047); }
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #01579b;
+            font-size: 0.9rem;
+            font-weight: 800;
+        }
+        .container {
+            width: min(100%, 980px);
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(90deg, #0288d1, #00bcd4);
+            color: white;
+            padding: 28px 30px;
+            text-align: center;
+        }
+        .logo-container { display: flex; justify-content: center; align-items: center; gap: 16px; }
+        .logo {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: white;
+            color: #0288d1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            flex: 0 0 auto;
+        }
+        .logo i { font-size: 2.5rem; }
+        h1 { font-size: 2.2rem; margin-bottom: 6px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.18); }
+        header p { opacity: 0.92; font-size: 1.05rem; }
+        .form-container { padding: 30px; }
+        .section-title {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #0288d1;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 30px 0 20px;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            right: 24px;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid #0288d1;
+        }
+        .insights-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+        .insight-card {
+            background: linear-gradient(135deg, #ffffff, #f2fbff);
+            border: 1px solid #d5eef6;
+            border-radius: 16px;
+            padding: 16px 18px;
+            box-shadow: 0 8px 18px rgba(2, 136, 209, 0.08);
+        }
+        .insight-card strong { display: block; color: #01579b; font-size: 1.35rem; margin-bottom: 4px; }
+        .insight-card span { color: #607d8b; font-size: 0.92rem; }
+        .section-progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+        .section-progress-card {
+            background: #fff;
+            border: 1px solid #dff3f8;
+            border-radius: 14px;
+            padding: 14px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+        }
+        .section-progress-card h3 { color: #01579b; font-size: 0.98rem; margin-bottom: 10px; }
+        .section-progress-meta { display: flex; justify-content: space-between; font-size: 0.84rem; color: #607d8b; margin-bottom: 8px; }
+        .section-progress-track { height: 10px; border-radius: 999px; background: #e9f7fb; overflow: hidden; }
+        .section-progress-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #29b6f6, #0288d1);
+            transition: width 0.45s ease;
+        }
+        .form-row { display: flex; flex-wrap: wrap; margin: 0 -10px; }
+        .form-col { flex: 1; min-width: 220px; padding: 0 10px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; color: #0288d1; font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+        input, select, textarea {
+            width: 100%;
+            border: 2px solid #e0f7fa;
+            border-radius: 10px;
+            background: #f5fdff;
+            padding: 14px;
+            font-size: 1rem;
+            transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #0288d1;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(2, 136, 209, 0.2);
+            background: white;
+        }
+        textarea { min-height: 118px; resize: vertical; }
+        .conditional-field { display: none; }
+        .conditional-field.show { display: block; }
+        .improvement-list { display: grid; gap: 18px; }
+        .improvement-card {
+            background: #f8fdff;
+            border: 1px solid #dff3f8;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+        }
+        .improvement-card-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+        .improvement-card-header h3 { color: #01579b; font-size: 1.08rem; }
+        .icon-btn {
+            width: 42px;
+            height: 42px;
+            border: 0;
+            border-radius: 50%;
+            background: #ffebee;
+            color: #c62828;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .actions-inline { margin-top: 18px; display: flex; justify-content: center; }
+        .secondary-btn, .submit-btn {
+            border-radius: 999px;
+            cursor: pointer;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 50px;
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+        .secondary-btn { background: #eef7fb; color: #01579b; border: 1px solid #cde7f2; padding: 14px 24px; }
+        .submit-btn {
+            border: 0;
+            background: linear-gradient(90deg, #0288d1, #00bcd4);
+            color: white;
+            padding: 16px 42px;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(2, 136, 209, 0.3);
+        }
+        .secondary-btn:hover, .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(2, 136, 209, 0.22); }
+        .btn-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(14, 30, 37, 0.55);
+            z-index: 2000;
+        }
+        .modal-overlay.show { display: flex; }
+        .review-modal {
+            width: min(850px, 100%);
+            max-height: 88vh;
+            overflow: auto;
+            background: #fff;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+        .review-modal h2 { color: #01579b; margin-bottom: 8px; }
+        .review-modal > p { color: #546e7a; margin-bottom: 18px; }
+        .report-card { border: 1px solid #dceff6; border-radius: 20px; overflow: hidden; background: white; margin-bottom: 18px; }
+        .report-card-header { background: linear-gradient(135deg, #0288d1, #039be5); color: white; padding: 24px; }
+        .report-card-header h3 { font-size: 1.55rem; margin-bottom: 6px; }
+        .report-section { padding: 18px 20px; border-top: 1px solid #edf5f8; }
+        .report-section h4 {
+            color: #fff;
+            background: linear-gradient(90deg, #0277bd, #039be5);
+            margin-bottom: 14px;
+            font-size: 1rem;
+            padding: 10px 14px;
+            border-radius: 12px;
+        }
+        .report-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+        .report-field { background: #f8fcfe; border: 1px solid #e3f1f6; border-radius: 14px; padding: 12px 14px; }
+        .report-field.full { grid-column: 1 / -1; }
+        .report-field strong { display: block; color: #0288d1; margin-bottom: 6px; }
+        .report-field span { color: #263238; white-space: pre-wrap; word-break: break-word; }
+        .modal-actions { display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap; }
+        .scroll-top-btn {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #0288d1;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 999;
+        }
+        .scroll-top-btn.visible { opacity: 1; pointer-events: auto; }
+        footer {
+            text-align: center;
+            padding: 18px;
+            background: rgba(2, 136, 209, 0.05);
+            border-top: 2px solid #e0f7fa;
+            color: #546e7a;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 34px 10px 10px;
+                line-height: 1.55;
+                background: #eef8fc;
+            }
+            .progress-container { height: 24px; }
+            .progress-text { font-size: 0.78rem; }
+            .container {
+                border-radius: 14px;
+                box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+            }
+            header { padding: 18px 16px; }
+            .logo-container {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            .logo {
+                width: 56px;
+                height: 56px;
+            }
+            .logo i { font-size: 1.9rem; }
+            h1 { font-size: 1.55rem; line-height: 1.25; }
+            header p { font-size: 0.92rem; }
+            .form-container { padding: 18px 12px; }
+            .section-title {
+                margin: 24px 0 16px;
+                padding: 12px 14px;
+                border-radius: 8px;
+                font-size: 1.05rem;
+                gap: 8px;
+            }
+            .insights-panel {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+            .insight-card {
+                border-radius: 10px;
+                padding: 12px;
+            }
+            .insight-card strong { font-size: 1.12rem; }
+            .insight-card span { font-size: 0.8rem; }
+            .section-progress-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                margin-bottom: 22px;
+            }
+            .section-progress-card {
+                border-radius: 10px;
+                padding: 12px;
+            }
+            .form-row {
+                display: block;
+                margin: 0;
+            }
+            .form-col {
+                min-width: 0;
+                padding: 0;
+            }
+            .form-group { margin-bottom: 16px; }
+            label {
+                font-size: 0.96rem;
+                margin-bottom: 7px;
+            }
+            input, select, textarea {
+                min-height: 50px;
+                padding: 12px;
+                border-radius: 9px;
+                font-size: 16px;
+            }
+            textarea { min-height: 104px; }
+            .improvement-list { gap: 14px; }
+            .improvement-card {
+                border-radius: 12px;
+                padding: 14px;
+            }
+            .improvement-card-header {
+                align-items: center;
+                margin-bottom: 12px;
+            }
+            .improvement-card-header h3 { font-size: 1rem; }
+            .icon-btn {
+                width: 46px;
+                height: 46px;
+                flex: 0 0 46px;
+            }
+            .actions-inline { margin-top: 14px; }
+            .report-grid { grid-template-columns: 1fr; }
+            .report-card {
+                border-radius: 12px;
+                margin-bottom: 14px;
+            }
+            .report-card-header { padding: 18px 16px; }
+            .report-card-header h3 { font-size: 1.25rem; }
+            .report-section { padding: 14px; }
+            .report-section h4 {
+                border-radius: 9px;
+                font-size: 0.92rem;
+            }
+            .report-field {
+                border-radius: 10px;
+                padding: 11px 12px;
+            }
+            .modal-overlay {
+                align-items: flex-start;
+                padding: 34px 8px 8px;
+            }
+            .review-modal {
+                width: 100%;
+                max-height: calc(100vh - 42px);
+                border-radius: 14px;
+                padding: 16px 12px;
+            }
+            .review-modal h2 { font-size: 1.25rem; }
+            .review-modal > p { font-size: 0.9rem; }
+            .btn-container, .modal-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .submit-btn, .secondary-btn {
+                width: 100%;
+                padding: 13px 16px;
+                min-height: 52px;
+                font-size: 1rem;
+            }
+            .secondary-btn:hover, .submit-btn:hover {
+                transform: none;
+            }
+            .scroll-top-btn {
+                right: 12px;
+                bottom: 12px;
+                width: 46px;
+                height: 46px;
+            }
+            footer {
+                padding: 14px 10px;
+                font-size: 0.82rem;
+            }
+        }
+        @media (max-width: 380px) {
+            .insights-panel { grid-template-columns: 1fr; }
+            h1 { font-size: 1.42rem; }
+            .section-title { font-size: 1rem; }
+        }
+
+        :root {
+            --ink: #18323f;
+            --muted: #617985;
+            --line: #d5e7ef;
+            --surface: #ffffff;
+            --surface-soft: #f5fbfe;
+            --brand-blue: #198ebe;
+            --brand-blue-strong: #0f6d99;
+            --brand-blue-soft: #e8f6fb;
+            --teal: #198ebe;
+            --teal-strong: #0f6d99;
+            --emerald: #548470;
+            --amber: #b7791f;
+            --coral: #c94a3a;
+            --shadow: 0 18px 44px rgba(15, 109, 153, 0.12);
+            --radius: 8px;
+        }
+
+        body {
+            background:
+                linear-gradient(180deg, rgba(25, 142, 190, 0.12), rgba(255, 255, 255, 0) 320px),
+                #eef7fb;
+            color: var(--ink);
+            padding: 54px 18px 24px;
+        }
+
+        .progress-container {
+            height: 12px;
+            background: #d8e7e8;
+            box-shadow: none;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--coral), var(--amber));
+        }
+
+        .progress-bar.medium { background: linear-gradient(90deg, var(--amber), #d9a441); }
+        .progress-bar.complete { background: linear-gradient(90deg, var(--emerald), #43a979); }
+
+        .progress-text {
+            top: 28px;
+            left: 22px;
+            transform: none;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            color: var(--teal-strong);
+            padding: 4px 11px;
+            box-shadow: 0 8px 20px rgba(23, 37, 47, 0.1);
+        }
+
+        .container {
+            width: min(100%, 1160px);
+            border-radius: 12px;
+            border: 1px solid rgba(25, 142, 190, 0.16);
+            background: var(--surface);
+            box-shadow: var(--shadow);
+        }
+
+        header {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 18% 20%, rgba(84, 132, 112, 0.2), transparent 30%),
+                linear-gradient(135deg, #ffffff, #f2fbff);
+            color: var(--ink);
+            padding: 28px 40px 30px;
+            text-align: start;
+        }
+
+        header::after {
+            content: "";
+            position: absolute;
+            inset-inline-start: 0;
+            bottom: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--brand-blue), var(--emerald), #83bfd7);
+        }
+
+        .logo-container {
+            position: relative;
+            z-index: 1;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .logo {
+            width: min(44vw, 320px);
+            min-width: 230px;
+            height: auto;
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
+            justify-content: flex-end;
+        }
+
+        .ehc-lockup {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            direction: ltr;
+        }
+
+        .ehc-logo-mark {
+            width: 118px;
+            height: auto;
+            flex: 0 0 auto;
+        }
+
+        .ehc-logo-text {
+            direction: rtl;
+            text-align: right;
+            color: var(--brand-blue);
+            line-height: 1.05;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .ehc-logo-text .arabic {
+            display: block;
+            font-size: clamp(1.35rem, 2.7vw, 2.15rem);
+            margin-bottom: 10px;
+        }
+
+        .ehc-logo-text .english {
+            direction: ltr;
+            display: block;
+            font-size: clamp(1.15rem, 2.35vw, 1.95rem);
+            text-align: left;
+        }
+
+        .ehc-logo-text .holding {
+            display: block;
+            color: var(--brand-blue-strong);
+            font-size: clamp(0.76rem, 1.25vw, 0.98rem);
+            margin-top: 8px;
+            font-weight: 800;
+        }
+
+        h1 {
+            color: var(--ink);
+            font-size: clamp(1.45rem, 2.2vw, 2rem);
+            line-height: 1.2;
+            margin-bottom: 8px;
+            letter-spacing: 0;
+            text-shadow: none;
+        }
+
+        header p {
+            color: var(--muted);
+            font-size: 1rem;
+            max-width: 420px;
+        }
+
+        .form-container { padding: 34px 40px 38px; }
+
+        .section-title {
+            background: transparent;
+            color: var(--ink);
+            border-radius: 0;
+            border-bottom: 1px solid var(--line);
+            padding: 0 0 13px;
+            margin: 34px 0 18px;
+            font-size: 1.16rem;
+        }
+
+        .section-title:first-child { margin-top: 0; }
+
+        .section-title::after { display: none; }
+
+        .section-title i {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--brand-blue-soft);
+            color: var(--teal-strong);
+        }
+
+        .insights-panel {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .insight-card,
+        .section-progress-card,
+        .improvement-card,
+        .report-card,
+        .report-field {
+            border-radius: var(--radius);
+        }
+
+        .insight-card {
+            background: var(--surface-soft);
+            border-color: var(--line);
+            box-shadow: none;
+            padding: 18px;
+        }
+
+        .insight-card strong {
+            color: var(--teal-strong);
+            font-size: 1.55rem;
+            line-height: 1.1;
+        }
+
+        .insight-card span { color: var(--muted); }
+
+        .section-progress-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .section-progress-card {
+            background: #fff;
+            border-color: var(--line);
+            box-shadow: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .section-progress-card:hover {
+            transform: translateY(-2px);
+            border-color: #b7ccd0;
+            box-shadow: 0 12px 26px rgba(23, 37, 47, 0.08);
+        }
+
+        .section-progress-card h3 { color: var(--ink); }
+
+        .section-progress-track {
+            height: 8px;
+            background: #e7eef0;
+        }
+
+        .section-progress-fill { background: linear-gradient(90deg, var(--teal), var(--emerald)); }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin: 0;
+        }
+
+        .form-row.event-time-row { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+        .form-col {
+            min-width: 0;
+            padding: 0;
+        }
+
+        .form-col.full-width { grid-column: 1 / -1; }
+        .form-col.conditional-col:not(:has(.conditional-field.show)) { display: none; }
+
+        .form-group { margin-bottom: 18px; }
+
+        label {
+            color: var(--ink);
+            font-size: 0.94rem;
+            margin-bottom: 7px;
+        }
+
+        label i { color: var(--teal); margin-left: 5px; }
+
+        input,
+        select,
+        textarea {
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: #fbfdfd;
+            color: var(--ink);
+            padding: 13px 14px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+        }
+
+        input:hover,
+        select:hover,
+        textarea:hover {
+            border-color: #b7ccd0;
+            background: #fff;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 4px rgba(0, 124, 137, 0.14);
+        }
+
+        input.is-complete,
+        select.is-complete,
+        textarea.is-complete {
+            border-color: rgba(33, 135, 91, 0.48);
+            background: #fbfffd;
+        }
+
+        input.is-missing,
+        select.is-missing,
+        textarea.is-missing {
+            border-color: var(--coral);
+            background: #fff8f7;
+            box-shadow: 0 0 0 4px rgba(201, 74, 58, 0.1);
+        }
+
+        .field-hint {
+            display: none;
+            margin-top: 6px;
+            color: var(--coral);
+            font-size: 0.84rem;
+            font-weight: 700;
+        }
+
+        .field-hint.show { display: block; }
+
+        .form-group:focus-within label { color: var(--teal-strong); }
+
+        textarea { min-height: 126px; }
+
+        #eventsSection,
+        #improvementsSection,
+        #approvalsSection {
+            scroll-margin-top: 72px;
+        }
+
+        .conditional-field.show {
+            display: block;
+            animation: revealField 0.22s ease;
+        }
+
+        @keyframes revealField {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .improvement-list { gap: 16px; }
+
+        .improvement-card {
+            background: #ffffff;
+            border-color: var(--line);
+            box-shadow: 0 10px 24px rgba(23, 37, 47, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .improvement-card:hover {
+            transform: translateY(-2px);
+            border-color: #b7ccd0;
+            box-shadow: 0 16px 32px rgba(23, 37, 47, 0.1);
+        }
+
+        .improvement-card-header h3 {
+            color: var(--teal-strong);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .improvement-card-header h3::before {
+            content: "";
+            width: 8px;
+            height: 28px;
+            border-radius: 99px;
+            background: var(--emerald);
+        }
+
+        .icon-btn {
+            border-radius: var(--radius);
+            background: #fff0ee;
+            color: var(--coral);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .icon-btn:hover {
+            transform: translateY(-1px);
+            background: #ffe3df;
+        }
+
+        .secondary-btn,
+        .submit-btn {
+            border-radius: var(--radius);
+            min-height: 48px;
+            box-shadow: none;
+        }
+
+        .secondary-btn {
+            background: #ffffff;
+            color: var(--teal-strong);
+            border-color: var(--line);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--teal), var(--emerald));
+            box-shadow: 0 12px 24px rgba(0, 124, 137, 0.22);
+        }
+
+        .secondary-btn:hover,
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .review-modal {
+            border-radius: 12px;
+            border: 1px solid var(--line);
+        }
+
+        .review-modal h2 { color: var(--ink); }
+        .review-modal > p { color: var(--muted); }
+
+        .report-card { border-color: var(--line); }
+
+        .report-card-header {
+            background: linear-gradient(135deg, var(--teal-strong), var(--teal));
+        }
+
+        .report-section h4 {
+            background: #e6f3f2;
+            color: var(--teal-strong);
+            border-radius: var(--radius);
+        }
+
+        .report-field {
+            background: var(--surface-soft);
+            border-color: var(--line);
+        }
+
+        .report-field strong { color: var(--teal-strong); }
+
+        .scroll-top-btn {
+            border-radius: var(--radius);
+            background: var(--teal-strong);
+        }
+
+        footer {
+            background: #f7faf9;
+            border-top: 1px solid var(--line);
+        }
+
+        @media (max-width: 980px) {
+            .insights-panel,
+            .section-progress-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .form-row,
+            .form-row.event-time-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .form-col.full-width { grid-column: 1 / -1; }
+        }
+
+        @media (max-width: 720px) {
+            body { padding: 46px 10px 12px; }
+            .progress-text {
+                top: 20px;
+                left: 10px;
+                font-size: 0.76rem;
+            }
+
+            .container { border-radius: 10px; }
+
+            header {
+                padding: 24px 18px 26px;
+                text-align: center;
+            }
+
+            .logo-container {
+                justify-content: center;
+                flex-direction: column;
+            }
+
+            .ehc-lockup {
+                flex-direction: column-reverse;
+                gap: 12px;
+            }
+
+            .ehc-logo-mark { width: 104px; }
+            .ehc-logo-text { text-align: center; }
+            .ehc-logo-text .english { text-align: center; }
+
+            .form-container { padding: 22px 14px 26px; }
+
+            .insights-panel,
+            .section-progress-grid,
+            .form-row.event-time-row,
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                align-items: flex-start;
+                font-size: 1.02rem;
+                margin-top: 28px;
+            }
+
+            .improvement-card { padding: 15px; }
+
+            .modal-overlay { padding-top: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+        <div class="progress-text" id="progressText">0%</div>
+    </div>
+    <div class="scroll-top-btn" id="scrollTopBtn" title="العودة للأعلى"><i class="fas fa-arrow-up"></i></div>
+
+    <main class="container">
+        <header>
+            <div class="logo-container">
+                <div class="ehc-lockup" aria-label="Eastern Health Cluster">
+                    <div class="ehc-logo-text">
+                        <span class="arabic">تجمع الشرقية الصحي</span>
+                        <span class="english">Eastern Health Cluster</span>
+                        <span class="holding">لشركة الصحة القابضة</span>
+                    </div>
+                    <img class="ehc-logo-mark" src="data:image/png;base64,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" alt="">
+                </div>
+                <div>
+                    <h1>الخطة التصحيحية للأحداث</h1>
+                    <p>إدارة الأزمات والكوارث بتجمع الشرقية الصحي</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="form-container">
+            <form id="correctivePlanForm" novalidate>
+                <div class="section-title"><i class="fas fa-chart-line"></i> لوحة الإنجاز</div>
+                <div class="insights-panel">
+                    <div class="insight-card"><strong id="completedFieldsCount">0</strong><span>حقول مكتملة</span></div>
+                    <div class="insight-card"><strong id="remainingFieldsCount">0</strong><span>حقول متبقية</span></div>
+                    <div class="insight-card"><strong id="improvementCount">1</strong><span>مناطق تحسين</span></div>
+                    <div class="insight-card"><strong id="activeSectionName">الأحداث</strong><span>القسم الأقل اكتمالًا</span></div>
+                </div>
+                <div class="section-progress-grid">
+                    <div class="section-progress-card">
+                        <h3>الأحداث</h3>
+                        <div class="section-progress-meta"><span id="meta-events">0 / 0</span><span id="pct-events">0%</span></div>
+                        <div class="section-progress-track"><div class="section-progress-fill" id="fill-events"></div></div>
+                    </div>
+                    <div class="section-progress-card">
+                        <h3>مناطق التحسين</h3>
+                        <div class="section-progress-meta"><span id="meta-improvements">0 / 0</span><span id="pct-improvements">0%</span></div>
+                        <div class="section-progress-track"><div class="section-progress-fill" id="fill-improvements"></div></div>
+                    </div>
+                    <div class="section-progress-card">
+                        <h3>الاعتمادات</h3>
+                        <div class="section-progress-meta"><span id="meta-approvals">0 / 0</span><span id="pct-approvals">0%</span></div>
+                        <div class="section-progress-track"><div class="section-progress-fill" id="fill-approvals"></div></div>
+                    </div>
+                </div>
+
+                <div class="section-title"><i class="fas fa-calendar-check"></i> بيانات الحدث</div>
+                <section id="eventsSection">
+                    <div class="form-row event-time-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="eventDate"><i class="fas fa-calendar-day"></i> التاريخ</label>
+                                <input type="date" id="eventDate" name="eventDate" required>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="eventStartTime"><i class="fas fa-clock"></i> بداية الوقت</label>
+                                <input type="time" id="eventStartTime" name="eventStartTime" required>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="eventEndTime"><i class="fas fa-clock"></i> نهاية الوقت</label>
+                                <input type="time" id="eventEndTime" name="eventEndTime" required>
+                                <small class="field-hint" id="eventTimeError">نهاية الوقت لا يمكن أن تكون قبل بداية الوقت.</small>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="eventDay"><i class="fas fa-calendar-week"></i> اليوم</label>
+                                <input type="text" id="eventDay" name="eventDay" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col full-width">
+                            <div class="form-group">
+                                <label for="facilityName"><i class="fas fa-network-wired"></i> اسم الشبكة</label>
+                                <select id="facilityName" name="facilityName" required>
+                                    <option value="" disabled selected>اختر اسم الشبكة</option>
+                                    <option value="Dammam Health Network (DHN)">Dammam Health Network (DHN)</option>
+                                    <option value="Qatif Health Network (QHN)">Qatif Health Network (QHN)</option>
+                                    <option value="Jubail Health Network (JHN)">Jubail Health Network (JHN)</option>
+                                    <option value="Khobar Health Network (KHN)">Khobar Health Network (KHN)</option>
+                                    <option value="Rural Health Network (RHN)">Rural Health Network (RHN)</option>
+                                    <option value="King Fahad Specialist Hospital (KFSH)">King Fahad Specialist Hospital (KFSH)</option>
+                                    <option value="Maternity and Children Hospital (MCH)">Maternity and Children Hospital (MCH)</option>
+                                    <option value="Eradah Complex for Mental Health">Eradah Complex for Mental Health</option>
+                                    <option value="Saud Al-Babtain Cardiac Center (SBCC)">Saud Al-Babtain Cardiac Center (SBCC)</option>
+                                    <option value="Dhahran Eye Specialty Hospital (DESH)">Dhahran Eye Specialty Hospital (DESH)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col conditional-col">
+                            <div class="form-group conditional-field" id="hospitalNameGroup">
+                                <label for="hospitalName"><i class="fas fa-hospital"></i> اسم المستشفى</label>
+                                <select id="hospitalName" name="hospitalName"></select>
+                            </div>
+                        </div>
+                        <div class="form-col conditional-col">
+                            <div class="form-group conditional-field" id="healthCenterGroup">
+                                <label for="healthCenterName"><i class="fas fa-clinic-medical"></i> اسم المركز الصحي</label>
+                                <select id="healthCenterName" name="healthCenterName"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="codeType"><i class="fas fa-code"></i> نوع الكود</label>
+                                <select id="codeType" name="codeType" required>
+                                    <option value="" disabled selected>اختر نوع الكود</option>
+                                    <option value="Brown">Brown</option>
+                                    <option value="Yellow">Yellow</option>
+                                    <option value="Code Max">Code Max</option>
+                                    <option value="Red">Red</option>
+                                    <option value="Orange">Orange</option>
+                                    <option value="Pink">Pink</option>
+                                    <option value="White">White</option>
+                                    <option value="Silver">Silver</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-col conditional-col">
+                            <div class="form-group conditional-field" id="codeDetailGroup">
+                                <label for="codeDetail"><i class="fas fa-list-check"></i> قسم الكود</label>
+                                <select id="codeDetail" name="codeDetail"></select>
+                            </div>
+                        </div>
+                        <div class="form-col conditional-col">
+                            <div class="form-group conditional-field" id="codeDetailFreeGroup">
+                                <label for="codeDetailFree"><i class="fas fa-pen"></i> قسم الكود</label>
+                                <input type="text" id="codeDetailFree" name="codeDetailFree" placeholder="اكتب قسم الكود">
+                            </div>
+                        </div>
+                        <div class="form-col conditional-col">
+                            <div class="form-group conditional-field" id="codeSubDetailGroup">
+                                <label for="codeSubDetail"><i class="fas fa-list-check"></i> الكود التفصيلي</label>
+                                <select id="codeSubDetail" name="codeSubDetail"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col full-width conditional-col">
+                            <div class="form-group conditional-field" id="codeDetailOtherGroup">
+                                <label for="codeDetailOther"><i class="fas fa-pen"></i> تفاصيل أخرى</label>
+                                <input type="text" id="codeDetailOther" name="codeDetailOther" placeholder="اكتب التفاصيل">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDescription"><i class="fas fa-file-lines"></i> وصف الحدث</label>
+                        <textarea id="eventDescription" name="eventDescription" placeholder="اكتب وصفًا واضحًا ومختصرًا للحدث" required></textarea>
+                    </div>
+                </section>
+
+                <div class="section-title"><i class="fas fa-tools"></i> مناطق التحسين</div>
+                <section id="improvementsSection">
+                    <div class="improvement-list" id="improvementList"></div>
+                    <div class="actions-inline">
+                        <button type="button" class="secondary-btn" id="addImprovementBtn">
+                            <i class="fas fa-plus"></i> إضافة منطقة تحسين
+                        </button>
+                    </div>
+                </section>
+
+                <div class="section-title"><i class="fas fa-signature"></i> الاعتماد والمراجعة</div>
+                <section id="approvalsSection">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="preparedBy"><i class="fas fa-pen"></i> الإعداد</label>
+                                <input type="text" id="preparedBy" name="preparedBy" placeholder="اسم معد الخطة" required>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="reviewedBy"><i class="fas fa-magnifying-glass"></i> المراجعة</label>
+                                <input type="text" id="reviewedBy" name="reviewedBy" placeholder="اسم المراجع" required>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="approvedBy"><i class="fas fa-circle-check"></i> الاعتماد</label>
+                                <input type="text" id="approvedBy" name="approvedBy" placeholder="اسم المعتمد" required>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="btn-container">
+                    <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> مراجعة الخطة</button>
+                </div>
+            </form>
+        </div>
+        <footer><p>الخطة التصحيحية للأحداث - نموذج إلكتروني تم إنشاؤه بواسطة سعاد مرزا - فيصل القرشي</p></footer>
+    </main>
+
+    <div class="modal-overlay" id="reviewModalOverlay">
+        <div class="review-modal">
+            <h2>مراجعة الخطة التصحيحية للأحداث</h2>
+            <p>راجع المدخلات قبل الطباعة أو التصدير إلى Excel.</p>
+            <div class="report-card" id="reportPreviewCard"></div>
+            <div class="modal-actions">
+                <button type="button" class="secondary-btn" id="cancelReviewBtn">رجوع للتعديل</button>
+                <button type="button" class="secondary-btn" id="printReportBtn"><i class="fas fa-print"></i> طباعة / PDF</button>
+                <button type="button" class="secondary-btn" id="sendOutlookBtn"><i class="fas fa-envelope"></i> إرسال Outlook</button>
+                <button type="button" class="submit-btn" id="exportExcelBtn"><i class="fas fa-file-excel"></i> تصدير Excel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="instructionsModalOverlay">
+        <div class="review-modal">
+            <h2>تعليمات الإرسال</h2>
+            <p>يرجى اتباع الخطوات التالية قبل إرسال الخطة التصحيحية للأحداث عبر Outlook.</p>
+            <div class="report-card">
+                <div class="report-section">
+                    <h4>خطوات مهمة</h4>
+                    <div class="report-grid">
+                        <div class="report-field full">
+                            <strong>حفظ ملف PDF</strong>
+                            <span>يرجى حفظ ملف PDF عبر زر الطباعة الموجود في نافذة المراجعة.</span>
+                        </div>
+                        <div class="report-field full">
+                            <strong>فتح Outlook</strong>
+                            <span>بعدها اضغط زر Outlook لفتح رسالة جاهزة.</span>
+                        </div>
+                        <div class="report-field full">
+                            <strong>إرفاق الملف</strong>
+                            <span>أرفق ملف PDF قبل إرسال البريد الإلكتروني.</span>
+                        </div>
+                        <div class="report-field full">
+                            <strong>نسخ البريد</strong>
+                            <span>عند فتح Outlook تأكد من وجود البريد الصحيح في خانة المستلم.</span>
+                        </div>
+                        <div class="report-field full">
+                            <strong>إرسال البريد</strong>
+                            <span>بعد التأكد من إرفاق ملف PDF والمستلم، أرسل البريد الإلكتروني.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="secondary-btn" id="backToFormBtn">رجوع للتعديل</button>
+                <button type="button" class="submit-btn" id="continueToReviewBtn"><i class="fas fa-arrow-left"></i> متابعة للمراجعة</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        const form = document.getElementById("correctivePlanForm");
+        const improvementList = document.getElementById("improvementList");
+        const outlookRecipient = "smerza@moh.gov.sa";
+        const weekdayNames = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+        let improvementIndex = 0;
+        let validationRequested = false;
+        const codeDetails = {
+            Brown: [
+                "Electrical Failure",
+                "Water Supply Failure",
+                "HVAC Failure",
+                "Medical Gas Failure",
+                "Sewage Failure",
+                "Communication Failure",
+                "Fire & Safety System Failure",
+                "Building Systems Failure",
+                "Other"
+            ],
+            Yellow: ["Mass Casualty", "Standby", "Infectious diseases", "Other"],
+            "Code Max": ["Full Capacity", "Other"],
+            Red: [
+                "Fire",
+                "Smoke",
+                "Collapse / Structural Failure",
+                "Partial Collapse",
+                "Internal Cause Collapse",
+                "External Cause Collapse",
+                "Non-Structural Failure",
+                "Other"
+            ],
+            Orange: ["Hazardous Spill", "Other"]
+        };
+        const codeSubDetails = {
+            "Electrical Failure": ["Total power outage", "Partial power outage", "Generator failure", "Electrical panel failure", "Other"],
+            "Water Supply Failure": ["Water outage", "Low pressure", "Water contamination", "Pump failure", "Water leaking", "Other"],
+            "HVAC Failure": ["Air conditioning failure", "Cooling/heating failure", "Ventilation failure", "Pressure failure (isolation rooms)", "Other"],
+            "Medical Gas Failure": ["Oxygen failure", "Low pressure", "Medical air failure", "Vacuum failure", "Gas leakage", "Other"],
+            "Sewage Failure": ["Blockage", "Overflow", "Backflow", "Other"],
+            "Communication Failure": ["Telephone failure", "Network failure", "System failure (HIS/EMR)", "Other"],
+            "Fire & Safety System Failure": ["Fire alarm failure", "Fire suppression failure", "Smoke detector failure", "Other"],
+            "Building Systems Failure": ["Elevator failure", "Access control failure", "Other"],
+            "Hazardous Spill": ["Chemical spill", "Biological spill", "Hazardous drug spill", "Other"],
+            "Collapse / Structural Failure": ["Full Collapse", "Building collapse", "Major roof collapse", "Structural failure", "Other"],
+            "Partial Collapse": ["Ceiling collapse", "Wall collapse", "Localized structural damage", "Other"],
+            "Internal Cause Collapse": ["Other"],
+            "External Cause Collapse": ["Other"],
+            "Non-Structural Failure": ["False ceiling collapse", "Equipment Falling", "Lighting Falling", "Glass facade failure", "Other"]
+        };
+        const networkHospitals = {
+            "Dammam Health Network (DHN)": [
+                "Dammam Medical Complex (DMC)",
+                "Dhahran Long-term Hospital",
+                "Primary Health Center"
+            ],
+            "Qatif Health Network (QHN)": [
+                "Qatif Central Hospital (QCH)",
+                "Prince Mohammed Bin Fahad Hospital (PMFH)",
+                "Primary Health Center"
+            ],
+            "Jubail Health Network (JHN)": [
+                "Jubail General Hospital (JGH)",
+                "Primary Health Center"
+            ],
+            "Khobar Health Network (KHN)": [
+                "Al Khobar Hospital (under construction)",
+                "Primary Health Center"
+            ],
+            "Rural Health Network (RHN)": [
+                "Al Khafji General Hospital",
+                "Nairiyah General Hospital",
+                "Abqaiq General Hospital",
+                "Ras Tanura General Hospital",
+                "Safwa General Hospital",
+                "Prince Sultan Hospital in Mulajjah",
+                "Prince Sultan Hospital in Uray'irah",
+                "Karya Olya General Hospital",
+                "Rafi'a General Hospital",
+                "Salwa General Hospital",
+                "Al Batha General Hospital",
+                "Anak General Hospital",
+                "Primary Health Center"
+            ]
+        };
+        const primaryHealthCenterOption = "Primary Health Center";
+        const networkHealthCenters = {
+            "Dammam Health Network (DHN)": [
+                "Badr",
+                "Al Faisaliyah",
+                "Al Jamiyeen",
+                "Iskan Dammam",
+                "Al Qadisiyah",
+                "Ghirnatah",
+                "Al Khaleej",
+                "Uhud Al Gharbi",
+                "Al Mubarakiyah (Al Hamra)",
+                "Al Aziziyah",
+                "Al Dhahiyah",
+                "Al Athir",
+                "Al Noor",
+                "Al Muhammadiyah",
+                "Al Manar",
+                "Taibah",
+                "Al Nada",
+                "Badr Al Gharbi",
+                "Al Shifa",
+                "Al Rawdah",
+                "Al Mazruiyah",
+                "Al Adamah"
+            ],
+            "Qatif Health Network (QHN)": [
+                "Darin",
+                "Al Qadeeh 1",
+                "Halah Mahish",
+                "Saihat 2",
+                "Al Dakhal Al Mahdood",
+                "Al Bustan",
+                "Al Reef",
+                "Qatif 3",
+                "Al Nabiyah",
+                "Sanabis",
+                "Al Awamiyah",
+                "Al Nasrah",
+                "Saihat 1",
+                "Al Jaroudiyah",
+                "Al Khuwaildiyah",
+                "Al Ridha",
+                "Al Tubi",
+                "Saihat 3",
+                "Al Bahari",
+                "Tarout",
+                "Al Qadeeh 2",
+                "Umm Al Hammam",
+                "Al Munirah",
+                "Al Shuwaikah",
+                "Al Majidiyah",
+                "Al Jish"
+            ],
+            "Jubail Health Network (JHN)": [
+                "Wasat Al Jubail (Al Razi)",
+                "Al Jubail Al Shamali (Bin Sina)"
+            ],
+            "Khobar Health Network (KHN)": [
+                "Al Aqrabiyah",
+                "Bin Hayyan",
+                "Al Jisr",
+                "Al Doha",
+                "Al Dana",
+                "Al Hizam Al Dhahabi",
+                "Al Khuzama",
+                "Al Mutlaqiyah",
+                "Al Rakah",
+                "Al Khobar Al Janoubi",
+                "Corniche"
+            ],
+            "Rural Health Network (RHN)": [
+                "Al Matar",
+                "Al Dughaymiyah",
+                "Al Rajhah",
+                "Foudah",
+                "Ain Dar Al Jadidah",
+                "Salasil",
+                "Al Fardaneyah",
+                "Al Jishiyah",
+                "Buqaiq",
+                "Hazm Safwa (Al Farabi)",
+                "Bin Al Haitham",
+                "Hazm Umm Al Sahik",
+                "Al Awjam",
+                "Ras Tanura Al Shamali",
+                "Abu Ma'an",
+                "Umm Al Sahik",
+                "Safwa (Al Manar)",
+                "Al Nairiyah",
+                "Al Kahfah",
+                "Al Aziziyah",
+                "Al Nuqayrah",
+                "Mulaijah",
+                "Nita'",
+                "Al Hasi",
+                "Atiq",
+                "Al Mlihah",
+                "Al Sarrar",
+                "Al Qalib",
+                "Hanidh",
+                "Al Zain",
+                "Ghanwa",
+                "Al Sahaf",
+                "Al Wanan",
+                "Maghati",
+                "Araj",
+                "Al Hinnah",
+                "Thaj",
+                "Gharb Al Khafji",
+                "Shamal Al Khafji",
+                "Al Safaniyah",
+                "Al Faisaliyah",
+                "Al Rafiah",
+                "Al Adhiriyah",
+                "Al Shihiyah",
+                "Al Faridah",
+                "Al Lahabah",
+                "Mishlah",
+                "Umm Uqla",
+                "Qaryat Al Ulya",
+                "Al Shait",
+                "Umm Al Shaflah",
+                "Al Lusafah",
+                "Al Radifah",
+                "Umm Kadad",
+                "Uraira",
+                "Joodah",
+                "Salwa",
+                "Iskan Al Batha",
+                "Al Wasee'"
+            ]
+        };
+
+        const sectionConfigs = [
+            { key: "events", label: "الأحداث", selector: "#eventsSection [required]" },
+            { key: "improvements", label: "مناطق التحسين", selector: "#improvementsSection [required]" },
+            { key: "approvals", label: "الاعتمادات", selector: "#approvalsSection [required]" }
+        ];
+
+        function pad(value) { return String(value).padStart(2, "0"); }
+
+        function setCurrentDateTime() {
+            const now = new Date();
+            document.getElementById("eventDate").value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+            document.getElementById("eventStartTime").value = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+            document.getElementById("eventEndTime").value = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+            document.getElementById("eventDay").value = weekdayNames[now.getDay()];
+            validateEventTimeRange();
+        }
+
+        function syncDayFromDate() {
+            const dateValue = document.getElementById("eventDate").value;
+            if (!dateValue) return;
+            const date = new Date(`${dateValue}T00:00:00`);
+            document.getElementById("eventDay").value = weekdayNames[date.getDay()];
+        }
+
+        function validateEventTimeRange() {
+            const startTime = document.getElementById("eventStartTime");
+            const endTime = document.getElementById("eventEndTime");
+            const timeError = document.getElementById("eventTimeError");
+            const isInvalid = Boolean(startTime.value && endTime.value && endTime.value < startTime.value);
+            endTime.setCustomValidity(isInvalid ? "نهاية الوقت لا يمكن أن تكون قبل بداية الوقت." : "");
+            timeError.classList.toggle("show", isInvalid);
+            return !isInvalid;
+        }
+
+        function selectedNetworkRequiresHospital() {
+            return Object.prototype.hasOwnProperty.call(networkHospitals, getValue("facilityName"));
+        }
+
+        function selectedHospitalRequiresHealthCenter() {
+            return selectedNetworkRequiresHospital() && getValue("hospitalName") === primaryHealthCenterOption;
+        }
+
+        function updateHealthCenterField() {
+            const healthCenterGroup = document.getElementById("healthCenterGroup");
+            const healthCenterName = document.getElementById("healthCenterName");
+            const selectedNetwork = getValue("facilityName");
+            const healthCenters = networkHealthCenters[selectedNetwork] || [];
+            const shouldShow = selectedHospitalRequiresHealthCenter();
+
+            healthCenterGroup.classList.toggle("show", shouldShow);
+            healthCenterName.required = shouldShow && healthCenters.length > 0;
+            healthCenterName.disabled = !shouldShow || healthCenters.length === 0;
+
+            if (!shouldShow) {
+                healthCenterName.innerHTML = "";
+                updateCompletionProgress();
+                return;
+            }
+
+            if (!healthCenters.length) {
+                healthCenterName.innerHTML = `<option value="" disabled selected>سيتم إضافة المراكز الصحية لهذه الشبكة</option>`;
+                updateCompletionProgress();
+                return;
+            }
+
+            healthCenterName.innerHTML = `<option value="" disabled selected>اختر اسم المركز الصحي</option>` +
+                healthCenters.map(center => `<option value="${escapeHtml(center)}">${escapeHtml(center)}</option>`).join("");
+            updateCompletionProgress();
+        }
+
+        function updateHospitalField() {
+            const hospitalNameGroup = document.getElementById("hospitalNameGroup");
+            const hospitalName = document.getElementById("hospitalName");
+            const selectedNetwork = getValue("facilityName");
+            const hospitals = networkHospitals[selectedNetwork] || [];
+
+            hospitalNameGroup.classList.toggle("show", selectedNetworkRequiresHospital());
+            hospitalName.required = selectedNetworkRequiresHospital() && hospitals.length > 0;
+            hospitalName.disabled = !selectedNetworkRequiresHospital() || hospitals.length === 0;
+
+            if (!selectedNetworkRequiresHospital()) {
+                hospitalName.innerHTML = "";
+                updateHealthCenterField();
+                updateCompletionProgress();
+                return;
+            }
+
+            if (!hospitals.length) {
+                hospitalName.innerHTML = `<option value="" disabled selected>سيتم إضافة المستشفيات لهذه الشبكة</option>`;
+                updateHealthCenterField();
+                updateCompletionProgress();
+                return;
+            }
+
+            hospitalName.innerHTML = `<option value="" disabled selected>اختر اسم المستشفى</option>` +
+                hospitals.map(hospital => `<option value="${escapeHtml(hospital)}">${escapeHtml(hospital)}</option>`).join("");
+            updateHealthCenterField();
+            updateCompletionProgress();
+        }
+
+        function updateCodeDetailFields() {
+            const codeType = document.getElementById("codeType").value;
+            const codeDetailGroup = document.getElementById("codeDetailGroup");
+            const codeDetailFreeGroup = document.getElementById("codeDetailFreeGroup");
+            const codeSubDetailGroup = document.getElementById("codeSubDetailGroup");
+            const codeDetailOtherGroup = document.getElementById("codeDetailOtherGroup");
+            const codeDetail = document.getElementById("codeDetail");
+            const codeDetailFree = document.getElementById("codeDetailFree");
+            const codeSubDetail = document.getElementById("codeSubDetail");
+            const codeDetailOther = document.getElementById("codeDetailOther");
+            const details = codeDetails[codeType] || [];
+
+            codeDetailGroup.classList.remove("show");
+            codeDetailFreeGroup.classList.remove("show");
+            codeSubDetailGroup.classList.remove("show");
+            codeDetailOtherGroup.classList.remove("show");
+            codeDetail.required = false;
+            codeDetailFree.required = false;
+            codeSubDetail.required = false;
+            codeDetailOther.required = false;
+            codeDetail.innerHTML = "";
+            codeSubDetail.innerHTML = "";
+            codeDetail.value = "";
+            codeSubDetail.value = "";
+            codeDetailFree.value = "";
+            codeDetailOther.value = "";
+
+            if (details.length) {
+                codeDetailGroup.classList.add("show");
+                codeDetail.required = true;
+                codeDetail.innerHTML = `<option value="" disabled selected>اختر قسم الكود</option>` +
+                    details.map(detail => `<option value="${escapeHtml(detail)}">${escapeHtml(detail)}</option>`).join("");
+            }
+
+            updateCompletionProgress();
+        }
+
+        function updateCodeSubDetailFields() {
+            const codeDetail = document.getElementById("codeDetail");
+            const codeSubDetailGroup = document.getElementById("codeSubDetailGroup");
+            const codeSubDetail = document.getElementById("codeSubDetail");
+            const codeDetailOther = document.getElementById("codeDetailOther");
+            const subDetails = codeSubDetails[codeDetail.value] || [];
+
+            codeSubDetailGroup.classList.remove("show");
+            codeSubDetail.required = false;
+            codeSubDetail.innerHTML = "";
+            codeSubDetail.value = "";
+            codeDetailOther.value = "";
+
+            if (subDetails.length) {
+                codeSubDetailGroup.classList.add("show");
+                codeSubDetail.required = true;
+                codeSubDetail.innerHTML = `<option value="" disabled selected>اختر الكود التفصيلي</option>` +
+                    subDetails.map(detail => `<option value="${escapeHtml(detail)}">${escapeHtml(detail)}</option>`).join("");
+            }
+
+            updateOtherCodeDetailField();
+            updateCompletionProgress();
+        }
+
+        function updateOtherCodeDetailField() {
+            const sectionIsOther = document.getElementById("codeDetail").value === "Other";
+            const detailIsOther = document.getElementById("codeSubDetail").value === "Other";
+            const isOther = sectionIsOther || detailIsOther;
+            const codeDetailOtherGroup = document.getElementById("codeDetailOtherGroup");
+            const codeDetailOther = document.getElementById("codeDetailOther");
+            codeDetailOtherGroup.classList.toggle("show", isOther);
+            codeDetailOther.required = isOther;
+            if (!isOther) codeDetailOther.value = "";
+            updateCompletionProgress();
+        }
+
+        function createImprovementCard() {
+            improvementIndex += 1;
+            const card = document.createElement("div");
+            card.className = "improvement-card";
+            card.dataset.index = improvementIndex;
+            card.innerHTML = `
+                <div class="improvement-card-header">
+                    <h3>منطقة تحسين ${improvementIndex}</h3>
+                    <button type="button" class="icon-btn remove-improvement-btn" title="حذف منطقة التحسين" aria-label="حذف منطقة التحسين">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="form-row">
+                    <div class="form-col"><div class="form-group"><label for="observation_${improvementIndex}">الملاحظة</label><textarea id="observation_${improvementIndex}" required placeholder="اكتب الملاحظة"></textarea></div></div>
+                    <div class="form-col"><div class="form-group"><label for="impact_${improvementIndex}">الأثر</label><textarea id="impact_${improvementIndex}" required placeholder="اكتب الأثر"></textarea></div></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col"><div class="form-group"><label for="rootCause_${improvementIndex}">السبب الجذري</label><textarea id="rootCause_${improvementIndex}" required placeholder="اكتب السبب الجذري"></textarea></div></div>
+                    <div class="form-col"><div class="form-group"><label for="responsibleDepartment_${improvementIndex}">القسم المسؤول</label><input id="responsibleDepartment_${improvementIndex}" type="text" required placeholder="اكتب القسم المسؤول"></div></div>
+                    <div class="form-col"><div class="form-group"><label for="timeFrame_${improvementIndex}">الإطار الزمني</label><input id="timeFrame_${improvementIndex}" type="text" required placeholder="مثال: خلال 30 يوم"></div></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col full-width"><div class="form-group"><label for="actionTaken_${improvementIndex}">الإجراء المتخذ</label><textarea id="actionTaken_${improvementIndex}" required placeholder="اكتب الإجراء المتخذ"></textarea></div></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col full-width"><div class="form-group"><label for="recommendation_${improvementIndex}">التوصية</label><textarea id="recommendation_${improvementIndex}" required placeholder="اكتب التوصية"></textarea></div></div>
+                </div>
+            `;
+            card.querySelector(".remove-improvement-btn").addEventListener("click", () => {
+                if (document.querySelectorAll(".improvement-card").length === 1) {
+                    alert("يجب أن تحتوي الخطة على منطقة تحسين واحدة على الأقل.");
+                    return;
+                }
+                card.remove();
+                renumberImprovementCards();
+                updateCompletionProgress();
+            });
+            improvementList.appendChild(card);
+            renumberImprovementCards();
+            updateCompletionProgress();
+        }
+
+        function renumberImprovementCards() {
+            document.querySelectorAll(".improvement-card").forEach((card, index) => {
+                card.querySelector("h3").textContent = `منطقة تحسين ${index + 1}`;
+            });
+            document.getElementById("improvementCount").textContent = document.querySelectorAll(".improvement-card").length;
+        }
+
+        function computeSectionCompletion(selector) {
+            validateEventTimeRange();
+            const fields = Array.from(document.querySelectorAll(selector));
+            const total = fields.length;
+            const completed = fields.filter(field => (field.value || "").trim() !== "" && field.checkValidity()).length;
+            return { total, completed, percentage: total === 0 ? 0 : Math.round((completed / total) * 100) };
+        }
+
+        function getCompletionStats() {
+            validateEventTimeRange();
+            const fields = Array.from(form.querySelectorAll("[required]"));
+            const total = fields.length;
+            const completed = fields.filter(field => (field.value || "").trim() !== "" && field.checkValidity()).length;
+            return { total, completed, percentage: total === 0 ? 0 : Math.round((completed / total) * 100) };
+        }
+
+        function refreshFieldStates() {
+            const fields = Array.from(form.querySelectorAll("[required]"));
+            fields.forEach(field => {
+                const hasValue = (field.value || "").trim() !== "";
+                const isValid = field.checkValidity();
+                field.classList.toggle("is-complete", hasValue && isValid);
+                field.classList.toggle("is-missing", validationRequested && (!hasValue || !isValid));
+            });
+        }
+
+        function updateSectionProgressCards() {
+            const stats = sectionConfigs.map(config => ({ ...config, ...computeSectionCompletion(config.selector) }));
+            stats.forEach(section => {
+                document.getElementById(`meta-${section.key}`).textContent = `${section.completed} / ${section.total}`;
+                document.getElementById(`pct-${section.key}`).textContent = `${section.percentage}%`;
+                document.getElementById(`fill-${section.key}`).style.width = `${section.percentage}%`;
+            });
+            const remaining = stats.filter(section => section.total > 0 && section.percentage < 100);
+            document.getElementById("activeSectionName").textContent = remaining.length
+                ? remaining.sort((a, b) => a.percentage - b.percentage)[0].label
+                : "مكتمل";
+        }
+
+        function updateCompletionProgress() {
+            const { total, completed, percentage } = getCompletionStats();
+            const progressBar = document.getElementById("progressBar");
+            progressBar.style.width = `${percentage}%`;
+            progressBar.classList.remove("medium", "complete");
+            if (percentage === 100) progressBar.classList.add("complete");
+            else if (percentage >= 50) progressBar.classList.add("medium");
+            document.getElementById("progressText").textContent = `${percentage}%`;
+            document.getElementById("completedFieldsCount").textContent = completed;
+            document.getElementById("remainingFieldsCount").textContent = Math.max(total - completed, 0);
+            refreshFieldStates();
+            updateSectionProgressCards();
+            return percentage;
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function getValue(id) { return document.getElementById(id)?.value?.trim() || "-"; }
+
+        function getCodeSectionValue() {
+            const codeType = getValue("codeType");
+            if (["Pink", "White", "Silver"].includes(codeType)) {
+                return "-";
+            }
+            if (getValue("codeDetail") === "Other") {
+                return getValue("codeDetailOther");
+            }
+            return getValue("codeDetail");
+        }
+
+        function getCodeDetailValue() {
+            const codeType = getValue("codeType");
+            if (["Pink", "White", "Silver"].includes(codeType)) {
+                return "-";
+            }
+            if (!document.getElementById("codeSubDetailGroup").classList.contains("show")) {
+                return "-";
+            }
+            if (getValue("codeSubDetail") === "Other") {
+                return getValue("codeDetailOther");
+            }
+            return getValue("codeSubDetail");
+        }
+
+        function getHospitalValue() {
+            return selectedNetworkRequiresHospital() ? getValue("hospitalName") : "-";
+        }
+
+        function getHealthCenterValue() {
+            return selectedHospitalRequiresHealthCenter() ? getValue("healthCenterName") : "-";
+        }
+
+        function collectImprovements() {
+            return Array.from(document.querySelectorAll(".improvement-card")).map((card, index) => {
+                const suffix = card.dataset.index;
+                return {
+                    number: index + 1,
+                    observation: getValue(`observation_${suffix}`),
+                    impact: getValue(`impact_${suffix}`),
+                    recommendation: getValue(`recommendation_${suffix}`),
+                    actionTaken: getValue(`actionTaken_${suffix}`),
+                    responsibleDepartment: getValue(`responsibleDepartment_${suffix}`),
+                    timeFrame: getValue(`timeFrame_${suffix}`),
+                    rootCause: getValue(`rootCause_${suffix}`)
+                };
+            });
+        }
+
+        function buildReportHtml() {
+            const hospitalReportField = selectedNetworkRequiresHospital()
+                ? `<div class="report-field"><strong>اسم المستشفى</strong><span>${escapeHtml(getHospitalValue())}</span></div>`
+                : "";
+            const healthCenterReportField = selectedHospitalRequiresHealthCenter()
+                ? `<div class="report-field"><strong>اسم المركز الصحي</strong><span>${escapeHtml(getHealthCenterValue())}</span></div>`
+                : "";
+            const improvements = collectImprovements().map(item => `
+                <div class="report-section">
+                    <h4>منطقة تحسين ${item.number}</h4>
+                    <div class="report-grid">
+                        <div class="report-field full"><strong>الملاحظة</strong><span>${escapeHtml(item.observation)}</span></div>
+                        <div class="report-field"><strong>الأثر</strong><span>${escapeHtml(item.impact)}</span></div>
+                        <div class="report-field"><strong>القسم المسؤول</strong><span>${escapeHtml(item.responsibleDepartment)}</span></div>
+                        <div class="report-field full"><strong>التوصية</strong><span>${escapeHtml(item.recommendation)}</span></div>
+                        <div class="report-field full"><strong>الإجراء المتخذ</strong><span>${escapeHtml(item.actionTaken)}</span></div>
+                        <div class="report-field"><strong>الإطار الزمني</strong><span>${escapeHtml(item.timeFrame)}</span></div>
+                        <div class="report-field"><strong>السبب الجذري</strong><span>${escapeHtml(item.rootCause)}</span></div>
+                    </div>
+                </div>
+            `).join("");
+            return `
+                <div class="report-card-header">
+                    <h3>الخطة التصحيحية للأحداث</h3>
+                    <p>${escapeHtml(getValue("facilityName"))}</p>
+                </div>
+                <div class="report-section">
+                    <h4>الأحداث</h4>
+                    <div class="report-grid">
+                        <div class="report-field"><strong>التاريخ</strong><span>${escapeHtml(getValue("eventDate"))}</span></div>
+                        <div class="report-field"><strong>بداية الوقت</strong><span>${escapeHtml(getValue("eventStartTime"))}</span></div>
+                        <div class="report-field"><strong>نهاية الوقت</strong><span>${escapeHtml(getValue("eventEndTime"))}</span></div>
+                        <div class="report-field"><strong>اليوم</strong><span>${escapeHtml(getValue("eventDay"))}</span></div>
+                        <div class="report-field"><strong>اسم الشبكة</strong><span>${escapeHtml(getValue("facilityName"))}</span></div>
+                        ${hospitalReportField}
+                        ${healthCenterReportField}
+                        <div class="report-field"><strong>نوع الكود</strong><span>${escapeHtml(getValue("codeType"))}</span></div>
+                        <div class="report-field"><strong>قسم الكود</strong><span>${escapeHtml(getCodeSectionValue())}</span></div>
+                        <div class="report-field"><strong>الكود التفصيلي</strong><span>${escapeHtml(getCodeDetailValue())}</span></div>
+                        <div class="report-field full"><strong>وصف الحدث</strong><span>${escapeHtml(getValue("eventDescription"))}</span></div>
+                    </div>
+                </div>
+                ${improvements}
+                <div class="report-section">
+                    <h4>الاعتماد والمراجعة</h4>
+                    <div class="report-grid">
+                        <div class="report-field"><strong>الإعداد</strong><span>${escapeHtml(getValue("preparedBy"))}</span></div>
+                        <div class="report-field"><strong>المراجعة</strong><span>${escapeHtml(getValue("reviewedBy"))}</span></div>
+                        <div class="report-field"><strong>الاعتماد</strong><span>${escapeHtml(getValue("approvedBy"))}</span></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function openReviewModal() {
+            document.getElementById("reportPreviewCard").innerHTML = buildReportHtml();
+            document.getElementById("reviewModalOverlay").classList.add("show");
+        }
+
+        function closeReviewModal() { document.getElementById("reviewModalOverlay").classList.remove("show"); }
+
+        function openInstructionsModal() {
+            document.getElementById("instructionsModalOverlay").classList.add("show");
+        }
+
+        function closeInstructionsModal() {
+            document.getElementById("instructionsModalOverlay").classList.remove("show");
+        }
+
+        function continueToReview() {
+            closeInstructionsModal();
+            openReviewModal();
+        }
+
+        function printReport() {
+            const printWindow = window.open("", "_blank");
+            if (!printWindow) {
+                alert("تعذر فتح نافذة الطباعة. تأكد من السماح بالنوافذ المنبثقة.");
+                return;
+            }
+            printWindow.document.open();
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="ar" dir="rtl">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>الخطة التصحيحية للأحداث</title>
+                    <style>
+                        * { box-sizing: border-box; }
+                        body { font-family: "Segoe UI", Tahoma, sans-serif; background: #eef8fc; padding: 24px; color: #263238; }
+                        .report-card { border: 1px solid #dceff6; border-radius: 20px; overflow: hidden; background: white; }
+                        .report-card-header { background: linear-gradient(135deg, #0288d1, #039be5); color: white; padding: 24px; }
+                        .report-card-header h3 { margin: 0 0 6px; font-size: 1.55rem; }
+                        .report-card-header p { margin: 0; }
+                        .report-section { padding: 18px 20px; border-top: 1px solid #edf5f8; page-break-inside: avoid; }
+                        .report-section h4 { color: #fff; background: #0277bd; margin: 0 0 14px; font-size: 1rem; padding: 10px 14px; border-radius: 12px; }
+                        .report-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+                        .report-field { background: #f8fcfe; border: 1px solid #e3f1f6; border-radius: 14px; padding: 12px 14px; }
+                        .report-field.full { grid-column: 1 / -1; }
+                        .report-field strong { display: block; color: #0288d1; margin-bottom: 6px; }
+                        .report-field span { white-space: pre-wrap; word-break: break-word; line-height: 1.7; }
+                        @media print {
+                            body { background: white; padding: 0; }
+                            .report-card { border: 0; border-radius: 0; }
+                            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                        }
+                    </style>
+                </head>
+                <body><div class="report-card">${buildReportHtml()}</div></body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => printWindow.print(), 400);
+        }
+
+        function getPdfFileName() {
+            const networkName = getValue("facilityName").replace(/[\\/:*?"<>|]/g, "-");
+            const hospitalName = getHospitalValue().replace(/[\\/:*?"<>|]/g, "-");
+            const healthCenterName = getHealthCenterValue().replace(/[\\/:*?"<>|]/g, "-");
+            const locationName = healthCenterName !== "-"
+                ? `${networkName}-${healthCenterName}`
+                : hospitalName !== "-" ? `${networkName}-${hospitalName}` : networkName;
+            return `corrective-plan-${locationName || "report"}.pdf`;
+        }
+
+        async function generatePdfBlob() {
+            if (typeof html2canvas === "undefined" || !window.jspdf) {
+                throw new Error("PDF libraries are not available");
+            }
+
+            const wrapper = document.createElement("div");
+            wrapper.style.position = "fixed";
+            wrapper.style.left = "-10000px";
+            wrapper.style.top = "0";
+            wrapper.style.width = "900px";
+            wrapper.style.background = "#ffffff";
+            wrapper.style.padding = "0";
+            wrapper.innerHTML = `<div class="report-card">${buildReportHtml()}</div>`;
+            document.body.appendChild(wrapper);
+
+            const canvas = await html2canvas(wrapper, {
+                scale: 2,
+                backgroundColor: "#ffffff",
+                useCORS: true
+            });
+            wrapper.remove();
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF("p", "mm", "a4");
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const margin = 8;
+            const imageWidth = pageWidth - (margin * 2);
+            const imageHeight = (canvas.height * imageWidth) / canvas.width;
+            const imageData = canvas.toDataURL("image/png");
+
+            let remainingHeight = imageHeight;
+            let position = margin;
+            pdf.addImage(imageData, "PNG", margin, position, imageWidth, imageHeight);
+            remainingHeight -= pageHeight - (margin * 2);
+
+            while (remainingHeight > 0) {
+                pdf.addPage();
+                position = margin - (imageHeight - remainingHeight);
+                pdf.addImage(imageData, "PNG", margin, position, imageWidth, imageHeight);
+                remainingHeight -= pageHeight - (margin * 2);
+            }
+
+            return pdf.output("blob");
+        }
+
+        function downloadBlob(blob, fileName) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        function openOutlookCompose() {
+            const subject = encodeURIComponent(`الخطة التصحيحية للأحداث - ${getValue("facilityName")}`);
+            const body = encodeURIComponent("مرفق تقرير الخطة التصحيحية للأحداث بصيغة PDF.");
+            const mailtoUrl = `mailto:${encodeURIComponent(outlookRecipient)}?subject=${subject}&body=${body}`;
+            const mailLink = document.createElement("a");
+            mailLink.href = mailtoUrl;
+            mailLink.style.display = "none";
+            document.body.appendChild(mailLink);
+            mailLink.click();
+            mailLink.remove();
+        }
+
+        async function sendPdfToOutlook() {
+            try {
+                const blob = await generatePdfBlob();
+                const fileName = getPdfFileName();
+                const file = new File([blob], fileName, { type: "application/pdf" });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+                    await navigator.share({
+                        files: [file],
+                        title: "الخطة التصحيحية للأحداث",
+                        text: `إرسال الخطة التصحيحية للأحداث إلى ${outlookRecipient}`
+                    });
+                    return;
+                }
+
+                downloadBlob(blob, fileName);
+                openOutlookCompose();
+                alert(`تم تنزيل ملف PDF وفتح Outlook برسالة جاهزة إلى ${outlookRecipient}. أرفق ملف PDF قبل إرسال البريد.`);
+            } catch (error) {
+                alert("تعذر إنشاء ملف PDF للإرسال. استخدم زر طباعة / PDF ثم أرفق الملف يدويًا في Outlook.");
+            }
+        }
+
+        function exportToExcel() {
+            if (typeof XLSX === "undefined") {
+                alert("تعذر تحميل مكتبة Excel. تأكد من الاتصال بالإنترنت ثم أعد المحاولة.");
+                return;
+            }
+            const improvements = collectImprovements();
+            const workbook = XLSX.utils.book_new();
+            const exportValue = value => value === "-" ? "" : value;
+            const baseRecord = {
+                EventDate: exportValue(getValue("eventDate")),
+                EventStartTime: exportValue(getValue("eventStartTime")),
+                EventEndTime: exportValue(getValue("eventEndTime")),
+                EventDay: exportValue(getValue("eventDay")),
+                NetworkName: exportValue(getValue("facilityName")),
+                HospitalName: exportValue(getHospitalValue()),
+                HealthCenterName: exportValue(getHealthCenterValue()),
+                CodeType: exportValue(getValue("codeType")),
+                CodeSection: exportValue(getCodeSectionValue()),
+                CodeDetail: exportValue(getCodeDetailValue()),
+                EventDescription: exportValue(getValue("eventDescription")),
+                PreparedBy: exportValue(getValue("preparedBy")),
+                ReviewedBy: exportValue(getValue("reviewedBy")),
+                ApprovedBy: exportValue(getValue("approvedBy"))
+            };
+            const powerBiRows = improvements.map(item => ({
+                ...baseRecord,
+                ImprovementNumber: item.number,
+                Observation: item.observation,
+                Impact: item.impact,
+                Recommendation: item.recommendation,
+                ActionTaken: item.actionTaken,
+                ResponsibleDepartment: item.responsibleDepartment,
+                TimeFrame: item.timeFrame,
+                RootCause: item.rootCause
+            }));
+            const summaryRows = [
+                ["Field", "Value"],
+                ["EventDate", baseRecord.EventDate],
+                ["EventStartTime", baseRecord.EventStartTime],
+                ["EventEndTime", baseRecord.EventEndTime],
+                ["EventDay", baseRecord.EventDay],
+                ["NetworkName", baseRecord.NetworkName],
+                ["HospitalName", baseRecord.HospitalName],
+                ["HealthCenterName", baseRecord.HealthCenterName],
+                ["CodeType", baseRecord.CodeType],
+                ["CodeSection", baseRecord.CodeSection],
+                ["CodeDetail", baseRecord.CodeDetail],
+                ["EventDescription", baseRecord.EventDescription],
+                ["PreparedBy", baseRecord.PreparedBy],
+                ["ReviewedBy", baseRecord.ReviewedBy],
+                ["ApprovedBy", baseRecord.ApprovedBy],
+                ["ImprovementCount", improvements.length]
+            ];
+            const powerBiSheet = XLSX.utils.json_to_sheet(powerBiRows);
+            const summarySheet = XLSX.utils.aoa_to_sheet(summaryRows);
+            powerBiSheet["!cols"] = [
+                { wch: 14 }, { wch: 12 }, { wch: 14 }, { wch: 34 }, { wch: 36 },
+                { wch: 30 }, { wch: 14 }, { wch: 24 }, { wch: 48 }, { wch: 24 },
+                { wch: 24 }, { wch: 24 }, { wch: 18 }, { wch: 48 }, { wch: 42 },
+                { wch: 48 }, { wch: 26 }, { wch: 22 }, { wch: 48 }
+            ];
+            powerBiSheet["!autofilter"] = { ref: XLSX.utils.encode_range(XLSX.utils.decode_range(powerBiSheet["!ref"])) };
+            summarySheet["!cols"] = [{ wch: 24 }, { wch: 80 }];
+            XLSX.utils.book_append_sheet(workbook, powerBiSheet, "CorrectivePlan");
+            XLSX.utils.book_append_sheet(workbook, summarySheet, "Summary");
+            const networkName = getValue("facilityName").replace(/[\\/:*?"<>|]/g, "-");
+            const hospitalName = getHospitalValue().replace(/[\\/:*?"<>|]/g, "-");
+            const healthCenterName = getHealthCenterValue().replace(/[\\/:*?"<>|]/g, "-");
+            const locationName = healthCenterName !== "-"
+                ? `${networkName}-${healthCenterName}`
+                : hospitalName !== "-" ? `${networkName}-${hospitalName}` : networkName;
+            XLSX.writeFile(workbook, `corrective-plan-${locationName || "report"}.xlsx`);
+        }
+
+        form.addEventListener("input", updateCompletionProgress);
+        form.addEventListener("change", updateCompletionProgress);
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const completionPercentage = updateCompletionProgress();
+            const timeRangeIsValid = validateEventTimeRange();
+            if (completionPercentage < 100 || !timeRangeIsValid) {
+                validationRequested = true;
+                form.classList.add("show-validation");
+                updateCompletionProgress();
+                const firstMissingField = form.querySelector("[required].is-missing, :invalid");
+                if (firstMissingField) {
+                    firstMissingField.scrollIntoView({ behavior: "smooth", block: "center" });
+                    firstMissingField.focus({ preventScroll: true });
+                }
+                alert(timeRangeIsValid
+                    ? `لم تكتمل الخطة بعد. نسبة الاكتمال الحالية ${completionPercentage}%.`
+                    : "نهاية الوقت لا يمكن أن تكون قبل بداية الوقت.");
+                return;
+            }
+            openInstructionsModal();
+        });
+        document.getElementById("eventDate").addEventListener("change", () => {
+            syncDayFromDate();
+            updateCompletionProgress();
+        });
+        document.getElementById("eventStartTime").addEventListener("change", updateCompletionProgress);
+        document.getElementById("eventEndTime").addEventListener("change", updateCompletionProgress);
+        document.getElementById("facilityName").addEventListener("change", updateHospitalField);
+        document.getElementById("hospitalName").addEventListener("change", updateHealthCenterField);
+        document.getElementById("codeType").addEventListener("change", updateCodeDetailFields);
+        document.getElementById("codeDetail").addEventListener("change", updateCodeSubDetailFields);
+        document.getElementById("codeSubDetail").addEventListener("change", updateOtherCodeDetailField);
+        document.getElementById("addImprovementBtn").addEventListener("click", createImprovementCard);
+        document.getElementById("cancelReviewBtn").addEventListener("click", closeReviewModal);
+        document.getElementById("backToFormBtn").addEventListener("click", closeInstructionsModal);
+        document.getElementById("continueToReviewBtn").addEventListener("click", continueToReview);
+        document.getElementById("printReportBtn").addEventListener("click", printReport);
+        document.getElementById("sendOutlookBtn").addEventListener("click", sendPdfToOutlook);
+        document.getElementById("exportExcelBtn").addEventListener("click", exportToExcel);
+        document.getElementById("reviewModalOverlay").addEventListener("click", (event) => {
+            if (event.target.id === "reviewModalOverlay") closeReviewModal();
+        });
+        document.getElementById("instructionsModalOverlay").addEventListener("click", (event) => {
+            if (event.target.id === "instructionsModalOverlay") closeInstructionsModal();
+        });
+        window.addEventListener("scroll", () => {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            document.getElementById("scrollTopBtn").classList.toggle("visible", scrollTop > 300);
+        });
+        document.getElementById("scrollTopBtn").addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+        [
+            ["fill-events", "eventsSection", "الانتقال إلى بيانات الحدث"],
+            ["fill-improvements", "improvementsSection", "الانتقال إلى مناطق التحسين"],
+            ["fill-approvals", "approvalsSection", "الانتقال إلى الاعتماد والمراجعة"]
+        ].forEach(([fillId, targetId, label]) => {
+            const card = document.getElementById(fillId)?.closest(".section-progress-card");
+            const target = document.getElementById(targetId);
+            if (!card || !target) return;
+            card.setAttribute("role", "button");
+            card.setAttribute("tabindex", "0");
+            card.setAttribute("aria-label", label);
+            const scrollToTarget = () => target.scrollIntoView({ behavior: "smooth", block: "start" });
+            card.addEventListener("click", scrollToTarget);
+            card.addEventListener("keydown", event => {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    scrollToTarget();
+                }
+            });
+        });
+
+        setCurrentDateTime();
+        createImprovementCard();
+        updateHospitalField();
+        updateCompletionProgress();
+    </script>
+</body>
+</html>
+
 
